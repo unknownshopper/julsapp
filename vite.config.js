@@ -4,25 +4,17 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
   // Cargar variables de entorno
   const env = loadEnv(mode, process.cwd(), '');
+  const isProduction = mode === 'production';
   
   return {
     plugins: [react()],
     // Configuración de compilación
     build: {
       outDir: 'dist',
-      sourcemap: false,
+      sourcemap: isProduction ? false : 'inline',
       chunkSizeWarningLimit: 1000,
+      minify: isProduction ? 'esbuild' : false,
       rollupOptions: {
-        external: [
-          // Agregar módulos que deben ser tratados como externos
-          '@mui/material',
-          '@emotion/react',
-          '@emotion/styled',
-          '@mui/icons-material',
-          'react',
-          'react-dom',
-          'react-router-dom'
-        ],
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom', 'react-router-dom'],
