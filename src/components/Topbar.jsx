@@ -19,7 +19,7 @@ import {
   FiChevronDown,
   FiChevronUp
 } from 'react-icons/fi';
-import './Topbar.css';
+import './TopBar.css';
 
 const Topbar = () => {
   const { currentUser, logout } = useAuth();
@@ -71,7 +71,10 @@ const Topbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Navigation items for both desktop and mobile
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   const navItems = [
     { to: '/', icon: <FiHome />, label: 'Resumen' },
     { to: '/clientes', icon: <FiUsers />, label: 'Clientes' },
@@ -91,10 +94,6 @@ const Topbar = () => {
       console.error('Error al cerrar sesión:', error);
       toast.error('No se pudo cerrar la sesión');
     }
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
   };
 
   // Obtener información del usuario
@@ -187,68 +186,60 @@ const Topbar = () => {
             aria-label="Notificaciones"
           >
             <FiBell className="w-5 h-5" />
-            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
           
           {/* Menú de usuario */}
-          <div className="relative ml-4">
-            <button 
+          <div className="relative ml-2">
+            <button
               onClick={toggleDropdown}
-              className="flex items-center space-x-2 focus:outline-none"
+              className="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-100 focus:outline-none"
               aria-expanded={isDropdownOpen}
               aria-haspopup="true"
             >
-              <div className="user-avatar">
+              <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-medium">
                 {userInitial}
               </div>
-              <div className="hidden md:block text-left">
-                <p className="text-sm font-medium text-gray-900">{username}</p>
-                <p className="text-xs text-gray-500">Administrador</p>
-              </div>
+              <span className="hidden md:inline-block text-sm font-medium text-gray-700">
+                {username}
+              </span>
+              {isDropdownOpen ? (
+                <FiChevronUp className="hidden md:block w-4 h-4 text-gray-500" />
+              ) : (
+                <FiChevronDown className="hidden md:block w-4 h-4 text-gray-500" />
+              )}
             </button>
             
             {/* Menú desplegable */}
             {isDropdownOpen && (
-              <div 
-                className="dropdown-content"
-                onMouseLeave={() => setIsDropdownOpen(false)}
-              >
-                <div className="px-4 py-3 border-b border-gray-100">
-                  <p className="text-sm font-medium text-gray-900">{username}</p>
-                  <p className="text-sm text-gray-500 truncate">{currentUser?.email}</p>
-                </div>
-                
-                <Link 
-                  to="/perfil" 
-                  className="dropdown-item"
-                  onClick={() => setIsDropdownOpen(false)}
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                <Link
+                  to="/perfil"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                 >
-                  <FiUser className="w-5 h-5" />
-                  <span>Mi perfil</span>
+                  <FiUser className="mr-2" />
+                  Mi perfil
                 </Link>
-                
-                <Link 
-                  to="/configuracion" 
-                  className="dropdown-item"
-                  onClick={() => setIsDropdownOpen(false)}
+                <Link
+                  to="/configuracion"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                 >
-                  <FiSettings className="w-5 h-5" />
-                  <span>Configuración</span>
+                  <FiSettings className="mr-2" />
+                  Configuración
                 </Link>
-                
-                <button 
-                  onClick={handleLogout} 
-                  className="dropdown-item text-red-600 hover:bg-red-50"
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                 >
-                  <FiLogOut className="w-5 h-5" />
-                  <span>Cerrar sesión</span>
+                  <FiLogOut className="mr-2" />
+                  Cerrar sesión
                 </button>
               </div>
             )}
           </div>
         </div>
       </div>
-
+      
       {/* Menú móvil */}
       <div className={`md:hidden fixed inset-0 bg-white z-40 transform transition-transform duration-300 ease-in-out ${
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'

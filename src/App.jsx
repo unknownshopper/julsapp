@@ -13,7 +13,7 @@ import Calendario from './components/Calendario/Calendario';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
-// Componente de ruta protegida
+// Componente de ruta protegida 
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useAuth();
   return currentUser ? children : <Navigate to="/login" />;
