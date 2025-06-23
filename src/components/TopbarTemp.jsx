@@ -40,15 +40,23 @@ const Topbar = () => {
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
+      console.log('Tamaño de pantalla detectado:', {
+        width: window.innerWidth,
+        isMobile: mobile,
+        isMenuOpen: isMobileMenuOpen
+      });
       setIsMobile(mobile);
       if (!mobile) {
         setIsMobileMenuOpen(false);
       }
     };
 
+    // Llamar una vez al montar
+    handleResize();
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isMobileMenuOpen]);
 
   // Cerrar menús al hacer clic fuera
   useEffect(() => {
@@ -139,23 +147,43 @@ const Topbar = () => {
       <div className="topbar-content">
         <div className="topbar-left">
           {/* Botón de menú móvil mejorado */}
-          <button 
-            onClick={toggleMobileMenu}
-            className="md:hidden p-2 -ml-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
-            aria-label="Menú principal"
-            aria-expanded={isMobileMenuOpen}
-            style={{
-              WebkitTapHighlightColor: 'transparent',
-              touchAction: 'manipulation',
-              zIndex: 100
-            }}
-          >
-            {isMobileMenuOpen ? (
-              <FiX className="w-6 h-6" style={{ color: '#1f2937' }} />
-            ) : (
-              <FiMenu className="w-6 h-6" style={{ color: '#1f2937' }} />
-            )}
-          </button>
+          <div style={{
+            position: 'fixed',
+            top: '15px',
+            left: '15px',
+            zIndex: 10001,
+            width: '44px',
+            height: '44px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'red',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          }}>
+            <button 
+              onClick={toggleMobileMenu}
+              aria-label="Menú principal"
+              aria-expanded={isMobileMenuOpen}
+              style={{
+                width: '100%',
+                height: '100%',
+                border: 'none',
+                background: 'transparent',
+                padding: '10px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              {isMobileMenuOpen ? (
+                <FiX className="w-6 h-6" style={{ color: 'white', minWidth: '24px' }} />
+              ) : (
+                <FiMenu className="w-6 h-6" style={{ color: 'white', minWidth: '24px' }} />
+              )}
+            </button>
+          </div>
           
           {/* Logo */}
           <Link to="/" className="hidden md:block text-xl font-bold text-gray-800 ml-2">

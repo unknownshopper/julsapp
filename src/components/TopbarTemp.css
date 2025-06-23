@@ -124,18 +124,22 @@
     padding: 0 1rem; /* Añadir padding para mejor espaciado */
   }
   
-  /* Estilos para el botón de menú móvil */
+  /* Estilos para el botón de menú móvil - DEBUG */
   .topbar-left button[aria-label="Menú principal"] {
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: transparent;
-    border: none;
+    width: 50px !important;
+    height: 50px !important;
+    background: red !important;
+    border: 2px solid yellow !important;
     cursor: pointer;
-    z-index: 10001;
-    position: relative;
+    z-index: 10001 !important;
+    position: relative !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   .topbar-left button[aria-label="Menú principal"] svg {
