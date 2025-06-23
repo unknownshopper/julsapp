@@ -7,6 +7,20 @@ export default defineConfig(({ mode }) => {
   
   return {
     plugins: [react()],
+    // Configuración de compilación
+    build: {
+      outDir: 'dist',
+      sourcemap: false,
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+            firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth']
+          }
+        }
+      }
+    },
     // Hacer que las variables de entorno estén disponibles en el cliente
     define: {
       'process.env': {
@@ -18,10 +32,16 @@ export default defineConfig(({ mode }) => {
         }, {})
       }
     },
-    // Configuración de servidor (opcional)
+    // Configuración de servidor
     server: {
       port: 3000,
-      open: true
+      open: true,
+      strictPort: true
+    },
+    // Configuración de preview
+    preview: {
+      port: 3000,
+      strictPort: true
     }
   };
 });
