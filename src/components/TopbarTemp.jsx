@@ -146,20 +146,20 @@ const Topbar = () => {
     <header className="topbar">
       <div className="topbar-content">
         <div className="topbar-left">
-          {/* Botón de menú móvil mejorado */}
-          <div style={{
+          {/* Botón de menú móvil - Siempre visible en móviles */}
+          <div className="sm:hidden" style={{
             position: 'fixed',
             top: '15px',
             left: '15px',
             zIndex: 10001,
             width: '44px',
             height: '44px',
+            backgroundColor: '#3b82f6',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'red',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+            justifyContent: 'center'
           }}>
             <button 
               onClick={toggleMobileMenu}
@@ -178,20 +178,20 @@ const Topbar = () => {
               }}
             >
               {isMobileMenuOpen ? (
-                <FiX className="w-6 h-6" style={{ color: 'white', minWidth: '24px' }} />
+                <FiX className="w-6 h-6" style={{ color: 'white' }} />
               ) : (
-                <FiMenu className="w-6 h-6" style={{ color: 'white', minWidth: '24px' }} />
+                <FiMenu className="w-6 h-6" style={{ color: 'white' }} />
               )}
             </button>
           </div>
           
-          {/* Logo */}
-          <Link to="/" className="hidden md:block text-xl font-bold text-gray-800 ml-2">
+          {/* Logo - Oculto en móviles, visible en pantallas medianas y superiores */}
+          <Link to="/" className="hidden sm:block text-xl font-bold text-gray-800 ml-2">
             Jules App
           </Link>
           
           {/* Navegación desktop */}
-          <nav className="hidden md:flex items-center space-x-1 ml-6">
+          <nav className="hidden sm:flex items-center space-x-1 ml-6">
             {navItems.map((item) => (
               <Link
                 key={item.to}
@@ -211,7 +211,7 @@ const Topbar = () => {
         
         <div className="topbar-right" ref={menuRef}>
           {/* Barra de búsqueda móvil */}
-          <div className="md:hidden flex items-center mr-2">
+          <div className="sm:hidden flex items-center mr-2">
             <button className="p-2 text-gray-500 hover:text-gray-700">
               <FiSearch className="w-5 h-5" />
             </button>
@@ -237,13 +237,13 @@ const Topbar = () => {
               <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-medium">
                 {userInitial}
               </div>
-              <span className="hidden md:inline-block text-sm font-medium text-gray-700">
+              <span className="hidden sm:inline-block text-sm font-medium text-gray-700">
                 {username}
               </span>
               {isDropdownOpen ? (
-                <FiChevronUp className="hidden md:block w-4 h-4 text-gray-500" />
+                <FiChevronUp className="hidden sm:block w-4 h-4 text-gray-500" />
               ) : (
-                <FiChevronDown className="hidden md:block w-4 h-4 text-gray-500" />
+                <FiChevronDown className="hidden sm:block w-4 h-4 text-gray-500" />
               )}
             </button>
             
