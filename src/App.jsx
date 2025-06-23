@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
-import TopBar from './components/TopBar';
+import Topbar from './components/TopbarTemp';
 import Dashboard from './components/Dashboard';
 import Clientes from './components/Clientes';
 import Tareas from './components/Tareas';
@@ -24,7 +24,7 @@ const Layout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* TopBar */}
-      <TopBar />
+      <Topbar />
       
       {/* Contenido principal */}
       <main className="flex-1 pt-16">

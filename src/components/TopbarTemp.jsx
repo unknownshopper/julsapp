@@ -19,7 +19,7 @@ import {
   FiChevronDown,
   FiChevronUp
 } from 'react-icons/fi';
-import './Topbar.css';
+import './TopbarTemp.css';
 
 const Topbar = () => {
   const { currentUser, logout } = useAuth();
