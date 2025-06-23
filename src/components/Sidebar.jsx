@@ -29,7 +29,23 @@ const NavItem = memo(({ to, icon, label, isActive, onClose }) => (
 
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
-  const isMobile = window.innerWidth < 768;
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+
+  // Actualizar estado de móvil al cambiar el tamaño
+  React.useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      
+      // Cerrar menú al cambiar a escritorio
+      if (!mobile) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [onClose]);
 
   // Usar useCallback para memoizar la función de cierre
   const handleClose = useCallback(() => {
@@ -48,18 +64,6 @@ const Sidebar = ({ isOpen, onClose }) => {
     { to: '/configuracion', icon: <FiSettings />, label: 'Configuración' },
   ];
 
-  // Efecto para manejar el cierre al cambiar de tamaño de pantalla
-  React.useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        onClose();
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [onClose]);
-
   return (
     <>
       {/* Overlay solo para móviles */}
@@ -74,9 +78,9 @@ const Sidebar = ({ isOpen, onClose }) => {
       <aside 
         className="sidebar"
         style={{
-          transform: isMobile ? (isOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none'
+          transform: isMobile ? (isOpen ? 'translateX(0)' : 'translateX(-100%)') : 'translateX(0)'
         }}
-        aria-hidden={!isOpen && isMobile}
+        aria-hidden={isMobile ? !isOpen : false}
       >
         <div className="flex justify-between items-center p-4 border-b border-gray-700">
           <span className="text-xl font-bold text-white">Jules App</span>

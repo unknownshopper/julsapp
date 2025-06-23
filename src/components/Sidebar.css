@@ -3,12 +3,9 @@
   --sidebar-width: 280px;
   width: var(--sidebar-width);
   height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
+  position: relative;
   background-color: #1a2236;
   color: #e5e7eb;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 40;
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
   padding: 0;
@@ -16,6 +13,30 @@
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* Estilos específicos para móvil */
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* Estilos específicos para escritorio */
+@media (min-width: 768px) {
+  .sidebar {
+    position: relative;
+    transform: none !important;
+  }
 }
 
 /* Estilos para móvil */
