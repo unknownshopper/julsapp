@@ -29,11 +29,14 @@ const NavItem = memo(({ to, icon, label, isActive, onClose }) => (
 
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
+  const isMobile = window.innerWidth < 768;
 
   // Usar useCallback para memoizar la función de cierre
   const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
+    if (isMobile) {
+      onClose();
+    }
+  }, [isMobile, onClose]);
 
   const navItems = [
     { to: '/', icon: <FiHome />, label: 'Resumen' },
@@ -45,20 +48,35 @@ const Sidebar = ({ isOpen, onClose }) => {
     { to: '/configuracion', icon: <FiSettings />, label: 'Configuración' },
   ];
 
+  // Efecto para manejar el cierre al cambiar de tamaño de pantalla
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [onClose]);
+
   return (
     <>
-      {/* Overlay para móviles */}
-      {isOpen && (
+      {/* Overlay solo para móviles */}
+      {isOpen && isMobile && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-70 z-40 md:hidden"
+          className="fixed inset-0 bg-black/70 z-40 md:hidden"
           onClick={handleClose}
           aria-hidden="true"
         />
       )}
       
       <aside 
-        className={`sidebar ${isOpen ? 'open' : ''}`}
-        aria-hidden={!isOpen}
+        className="sidebar"
+        style={{
+          transform: isMobile ? (isOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none'
+        }}
+        aria-hidden={!isOpen && isMobile}
       >
         <div className="flex justify-between items-center p-4 border-b border-gray-700">
           <span className="text-xl font-bold text-white">Jules App</span>
@@ -71,8 +89,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
         </div>
         
-        <nav className="p-2">
-          <ul className="space-y-1">
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="p-2 space-y-1">
             {navItems.map((item) => (
               <NavItem
                 key={item.to}
@@ -86,7 +104,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </ul>
         </nav>
         
-        <div className="mt-auto p-4 text-xs text-gray-400 border-t border-gray-700">
+        <div className="p-4 text-xs text-gray-400 border-t border-gray-700">
           <p>© {new Date().getFullYear()} Jules App</p>
           <p className="text-gray-500">v1.0.0</p>
         </div>

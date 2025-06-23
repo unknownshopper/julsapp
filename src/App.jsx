@@ -78,7 +78,7 @@ const Layout = ({ children }) => {
   }, [isMobile]);
   
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Botón de menú móvil */}
       <button 
         className="fixed top-4 left-4 z-50 w-12 h-12 bg-blue-600 text-white rounded-lg flex items-center justify-center text-2xl shadow-lg transform transition-transform duration-200 active:scale-95 md:hidden"
@@ -92,19 +92,21 @@ const Layout = ({ children }) => {
       
       {/* Sidebar */}
       <Sidebar 
-        isOpen={isSidebarOpen} 
+        isOpen={isMobile ? isSidebarOpen : true} 
         onClose={closeSidebar}
       />
       
       {/* Contenido principal */}
       <main 
         id="main-content"
-        className={`flex-1 transition-transform duration-300 ease-in-out ${
+        className={`flex-1 min-h-screen transition-all duration-300 ease-in-out ${
           isSidebarOpen && isMobile ? 'translate-x-72' : ''
         }`}
         onClick={closeSidebar}
       >
-        <div className="container mx-auto p-4 pt-20 md:pt-6 md:ml-0">
+        <div className={`container mx-auto p-4 pt-20 transition-all duration-300 ${
+          isMobile ? '' : 'md:ml-72 md:pt-6'
+        }`}>
           {children}
         </div>
       </main>
