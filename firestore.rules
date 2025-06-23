@@ -1,22 +1,77 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write access to all users under the following conditions:
-    // 1. User is authenticated
-    // 2. User can only access their own data
-    match /clientes/{clienteId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.usuarioId;
-      allow create: if request.auth != null && request.resource.data.usuarioId == request.auth.uid;
+    // TEMPORAL: Reglas permisivas para desarrollo
+    match /{document=**} {
+      allow read, write: if request.auth != null;
     }
     
+    // Reglas específicas (temporalmente deshabilitadas)
+    /*
+    // Allow users to manage their own clientes
+    match /clientes/{clienteId} {
+      // Allow read if user is authenticated and owns the document
+      allow read: if request.auth != null && request.auth.uid == resource.data.usuarioId;
+      // Allow create if user is authenticated and includes their userId
+      allow create: if request.auth != null && 
+                   request.resource.data.usuarioId == request.auth.uid;
+      // Allow update if user is authenticated and owns the document
+      allow update: if request.auth != null && 
+                   request.auth.uid == resource.data.usuarioId;
+      // Allow delete if user is authenticated and owns the document
+      allow delete: if request.auth != null && 
+                   request.auth.uid == resource.data.usuarioId;
+    }
+    
+    // Allow users to manage their own tareas
     match /tareas/{tareaId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.usuarioId;
-      allow create: if request.auth != null && request.resource.data.usuarioId == request.auth.uid;
+      // Allow read if user is authenticated and owns the document
+      allow read: if request.auth != null && request.auth.uid == resource.data.usuarioId;
+      // Allow create if user is authenticated and includes their userId
+      allow create: if request.auth != null && 
+                   request.resource.data.usuarioId == request.auth.uid;
+      // Allow update if user is authenticated and owns the document
+      allow update: if request.auth != null && 
+                   request.auth.uid == resource.data.usuarioId;
+      // Allow delete if user is authenticated and owns the document
+      allow delete: if request.auth != null && 
+                   request.auth.uid == resource.data.usuarioId;
+    }
+    
+    // Allow users to manage their own actividades
+    match /actividades/{actividadId} {
+      // Allow read if user is authenticated and owns the document
+      allow read: if request.auth != null && request.auth.uid == resource.data.usuarioId;
+      // Allow create if user is authenticated and includes their userId
+      allow create: if request.auth != null && 
+                   request.resource.data.usuarioId == request.auth.uid;
+      // No permitir actualizaciones ni eliminaciones de actividades
+      allow update, delete: if false;
+    }
+    
+    // Allow users to manage their own ventas
+    match /ventas/{ventaId} {
+      // Allow read if user is authenticated and owns the document
+      allow read: if request.auth != null && request.auth.uid == resource.data.usuarioId;
+      // Allow create if user is authenticated and includes their userId
+      allow create: if request.auth != null && 
+                   request.resource.data.usuarioId == request.auth.uid;
+      // Allow queries with aggregation (needed for sum operations)
+      allow list: if request.auth != null;
+      // No permitir actualizaciones ni eliminaciones de ventas
+      allow update, delete: if false;
+    }
+    
+    // Allow aggregation queries on ventas collection
+    match /{path=**}/ventas {
+      allow read: if request.auth != null;
     }
     
     // Default deny all other requests
     match /{document=**} {
       allow read, write: if false;
-    }
+    }*/
+    
+    // Fin de reglas temporales
   }
 }
