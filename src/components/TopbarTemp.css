@@ -1,5 +1,10 @@
 /* Estilos para la barra superior */
 .topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background-color: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   height: 70px;
@@ -65,6 +70,25 @@
   padding: 0.125rem 0.5rem;
   border-radius: 0.5rem;
   margin-top: 0.125rem;
+}
+
+/* Ajustes específicos para móviles */
+@media (max-width: 767px) {
+  /* Asegurar que el contenido no quede detrás del topbar fijo */
+  .main-content {
+    padding-top: 70px;
+  }
+  
+  /* Mejorar la accesibilidad táctil en móviles */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Asegurar que los inputs sean fáciles de tocar */
+  input, textarea, select {
+    font-size: 16px; /* Evita el zoom automático en iOS */
+  }
 }
 
 /* Menú móvil */

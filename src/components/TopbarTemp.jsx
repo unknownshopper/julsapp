@@ -138,14 +138,23 @@ const Topbar = () => {
     <header className="topbar">
       <div className="topbar-content">
         <div className="topbar-left">
-          {/* Botón de menú móvil */}
+          {/* Botón de menú móvil mejorado */}
           <button 
             onClick={toggleMobileMenu}
-            className="md:hidden p-2 -ml-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
+            className="md:hidden p-2 -ml-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
             aria-label="Menú principal"
             aria-expanded={isMobileMenuOpen}
+            style={{
+              WebkitTapHighlightColor: 'transparent',
+              touchAction: 'manipulation',
+              zIndex: 100
+            }}
           >
-            {isMobileMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+            {isMobileMenuOpen ? (
+              <FiX className="w-6 h-6" style={{ color: '#1f2937' }} />
+            ) : (
+              <FiMenu className="w-6 h-6" style={{ color: '#1f2937' }} />
+            )}
           </button>
           
           {/* Logo */}
@@ -240,48 +249,51 @@ const Topbar = () => {
         </div>
       </div>
       
-      {/* Menú móvil */}
-      <div 
-        className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}
-        style={{
-          display: isMobile ? 'block' : 'none',
-          zIndex: 9999,
-          height: 'calc(100vh - 70px)'
-        }}
-      >
-        <div className="px-2 pt-2 pb-3 space-y-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className={`mobile-menu-item ${isActive(item.to) ? 'active' : ''}`}
+      {/* Menú móvil simplificado */}
+      {isMobile && (
+        <>
+          {/* Overlay */}
+          {isMobileMenuOpen && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
               onClick={toggleMobileMenu}
-            >
-              <span className="icon">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-          {/* Botón de cierre de sesión en el menú móvil */}
-          <button
-            onClick={() => {
-              handleLogout();
-              toggleMobileMenu();
-            }}
-            className="mobile-menu-item w-full text-left"
+              style={{ top: '70px' }}
+            />
+          )}
+          
+          {/* Menú lateral */}
+          <div 
+            className={`fixed top-[70px] left-0 bottom-0 w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
+              isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
           >
-            <span className="icon"><FiLogOut /></span>
-            Cerrar sesión
-          </button>
-        </div>
-      </div>
-      
-      {/* Overlay para cerrar el menú al hacer clic fuera */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-30"
-          onClick={toggleMobileMenu}
-          style={{ top: '70px' }}
-        />
+            <div className="h-full overflow-y-auto py-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 ${
+                    isActive(item.to) ? 'bg-blue-50 text-blue-600' : ''
+                  }`}
+                  onClick={toggleMobileMenu}
+                >
+                  <span className="mr-3">{item.icon}</span>
+                  {item.label}
+                </Link>
+              ))}
+              <button
+                onClick={() => {
+                  handleLogout();
+                  toggleMobileMenu();
+                }}
+                className="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 flex items-center"
+              >
+                <span className="mr-3"><FiLogOut /></span>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </header>
   );
