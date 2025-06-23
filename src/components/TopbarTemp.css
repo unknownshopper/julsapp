@@ -121,6 +121,27 @@
     left: 0;
     right: 0;
     z-index: 10000; /* Asegurar que esté por encima de otros elementos */
+    padding: 0 1rem; /* Añadir padding para mejor espaciado */
+  }
+  
+  /* Estilos para el botón de menú móvil */
+  .topbar-left button[aria-label="Menú principal"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10001;
+    position: relative;
+  }
+  
+  .topbar-left button[aria-label="Menú principal"] svg {
+    width: 24px;
+    height: 24px;
+    color: #4b5563;
   }
   
   /* Ajustar el contenido principal para que no quede detrás del menú fijo */
