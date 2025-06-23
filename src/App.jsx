@@ -24,6 +24,7 @@ const PrivateRoute = ({ children }) => {
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const location = useLocation();
+  const isMobile = React.useMemo(() => window.innerWidth < 768, []);
   
   // Cerrar el menú al cambiar de ruta
   React.useEffect(() => {
@@ -32,35 +33,59 @@ const Layout = ({ children }) => {
   
   // Efecto para manejar el scroll y el overlay cuando el menú está abierto
   React.useEffect(() => {
+    if (!isMobile) return;
+    
     if (isSidebarOpen) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     } else {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     }
     
     return () => {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     };
+  }, [isSidebarOpen, isMobile]);
+
+  // Manejar el cierre con la tecla Escape
+  React.useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isSidebarOpen) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
   }, [isSidebarOpen]);
   
+  const toggleSidebar = React.useCallback(() => {
+    setIsSidebarOpen(prev => !prev);
+  }, []);
+  
+  const closeSidebar = React.useCallback(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [isMobile]);
+  
   return (
-    <div className="dashboard-container">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Botón de menú móvil */}
       <button 
-        className="fixed top-4 left-4 z-[1000] w-12 h-12 bg-red-500 text-white rounded-lg flex items-center justify-center text-2xl shadow-md border-2 border-white cursor-pointer transform hover:scale-105 transition-transform md:hidden"
-        style={{
-          // Asegurar que esté por encima de otros elementos
-          transform: 'translateZ(0)',
-          WebkitTransform: 'translateZ(0)',
-          willChange: 'transform',
-          pointerEvents: 'auto'
-        }}
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="fixed top-4 left-4 z-50 w-12 h-12 bg-blue-600 text-white rounded-lg flex items-center justify-center text-2xl shadow-lg transform transition-transform duration-200 active:scale-95 md:hidden"
+        onClick={toggleSidebar}
         aria-label={isSidebarOpen ? 'Cerrar menú' : 'Abrir menú'}
         aria-expanded={isSidebarOpen}
+        aria-controls="sidebar-navigation"
       >
         {isSidebarOpen ? '✕' : '☰'}
       </button>
@@ -68,24 +93,21 @@ const Layout = ({ children }) => {
       {/* Sidebar */}
       <Sidebar 
         isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
+        onClose={closeSidebar}
       />
       
       {/* Contenido principal */}
       <main 
-        className={`main-content ${isSidebarOpen ? 'menu-open' : ''}`}
-        onClick={() => isSidebarOpen && setIsSidebarOpen(false)}
+        id="main-content"
+        className={`flex-1 transition-transform duration-300 ease-in-out ${
+          isSidebarOpen && isMobile ? 'translate-x-72' : ''
+        }`}
+        onClick={closeSidebar}
       >
-        {children}
+        <div className="container mx-auto p-4 pt-20 md:pt-6 md:ml-0">
+          {children}
+        </div>
       </main>
-      
-      {/* Overlay para móviles */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
     </div>
   );
 };

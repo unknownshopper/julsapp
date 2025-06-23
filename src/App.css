@@ -1,25 +1,56 @@
 /* Estilos específicos de la aplicación que no pueden ser manejados por Tailwind */
 /* Los estilos globales se manejan en index.css */
 
-/* Contenedor principal */
-.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-  background-color: #f9fafb;
-  position: relative;
-  overflow-x: hidden; /* Evita el desplazamiento horizontal */
+/* Mejoras de rendimiento para móviles */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
-.main-content {
-  flex: 1;
-  padding: 1.5rem;
-  margin-left: 16rem; /* Ajusta según el ancho del Sidebar */
-  transition: all 0.3s ease;
-  overflow-y: auto;
-  width: 100%;
-  min-height: 100vh;
-  position: relative;
-  z-index: 1; /* Reducido para que no interfiera con el botón */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+/* Mejoras de rendimiento para animaciones */
+.performance * {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimización de fuentes para móviles */
+@media (max-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+  
+  body {
+    text-rendering: optimizeSpeed;
+  }
+}
+
+/* Mejoras de accesibilidad para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111827;
+    color: #f3f4f6;
+  }
+}
+
+/* Mejoras para dispositivos táctiles */
+@media (hover: none) {
+  button, a {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
 }
 
 /* Ajustes responsivos */

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   FiHome,
@@ -7,12 +7,33 @@ import {
   FiSettings,
   FiCalendar,
   FiFileText,
-  FiBriefcase
+  FiBriefcase,
+  FiX
 } from 'react-icons/fi';
 import './Sidebar.css';
 
+// Componente memoizado para evitar renders innecesarios
+const NavItem = memo(({ to, icon, label, isActive, onClose }) => (
+  <li>
+    <Link 
+      to={to}
+      className={`flex items-center p-3 hover:bg-gray-700 transition-colors ${isActive ? 'bg-gray-700 text-white' : 'text-gray-300'}`}
+      onClick={onClose}
+      aria-current={isActive ? 'page' : undefined}
+    >
+      <span className="text-xl mr-3">{icon}</span>
+      <span className="text-sm font-medium">{label}</span>
+    </Link>
+  </li>
+));
+
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
+
+  // Usar useCallback para memoizar la función de cierre
+  const handleClose = useCallback(() => {
+    onClose();
+  }, [onClose]);
 
   const navItems = [
     { to: '/', icon: <FiHome />, label: 'Resumen' },
@@ -29,36 +50,45 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Overlay para móviles */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
-          onClick={onClose}
+          className="fixed inset-0 bg-black bg-opacity-70 z-40 md:hidden"
+          onClick={handleClose}
+          aria-hidden="true"
         />
       )}
       
-      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <div className="sidebar-header">
-          <span className="app-title">Jules App</span>
+      <aside 
+        className={`sidebar ${isOpen ? 'open' : ''}`}
+        aria-hidden={!isOpen}
+      >
+        <div className="flex justify-between items-center p-4 border-b border-gray-700">
+          <span className="text-xl font-bold text-white">Jules App</span>
+          <button 
+            onClick={handleClose}
+            className="md:hidden p-2 text-gray-400 hover:text-white"
+            aria-label="Cerrar menú"
+          >
+            <FiX size={24} />
+          </button>
         </div>
         
-        <nav className="sidebar-nav">
-          <ul>
+        <nav className="p-2">
+          <ul className="space-y-1">
             {navItems.map((item) => (
-              <li key={item.to}>
-                <Link 
-                  to={item.to}
-                  className={`flex items-center ${location.pathname === item.to ? 'active' : ''}`}
-                  onClick={onClose}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </Link>
-              </li>
+              <NavItem
+                key={item.to}
+                to={item.to}
+                icon={item.icon}
+                label={item.label}
+                isActive={location.pathname === item.to}
+                onClose={handleClose}
+              />
             ))}
           </ul>
         </nav>
         
-        <div className="mt-auto p-4 text-xs text-gray-500 border-t border-gray-800">
+        <div className="mt-auto p-4 text-xs text-gray-400 border-t border-gray-700">
           <p>© {new Date().getFullYear()} Jules App</p>
-          <p className="text-gray-600">v1.0.0</p>
+          <p className="text-gray-500">v1.0.0</p>
         </div>
       </aside>
     </>
