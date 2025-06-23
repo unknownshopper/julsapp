@@ -50,7 +50,14 @@ const Layout = ({ children }) => {
     <div className="dashboard-container">
       {/* Botón de menú móvil */}
       <button 
-        className="mobile-menu-button md:hidden"
+        className="fixed top-4 left-4 z-[1000] w-12 h-12 bg-red-500 text-white rounded-lg flex items-center justify-center text-2xl shadow-md border-2 border-white cursor-pointer transform hover:scale-105 transition-transform md:hidden"
+        style={{
+          // Asegurar que esté por encima de otros elementos
+          transform: 'translateZ(0)',
+          WebkitTransform: 'translateZ(0)',
+          willChange: 'transform',
+          pointerEvents: 'auto'
+        }}
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         aria-label={isSidebarOpen ? 'Cerrar menú' : 'Abrir menú'}
         aria-expanded={isSidebarOpen}

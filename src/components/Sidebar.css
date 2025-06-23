@@ -8,7 +8,7 @@
   background-color: #1a2236;
   color: #e5e7eb;
   transition: transform 0.3s ease, width 0.3s ease;
-  z-index: 50;
+  z-index: 40; /* Reducido para que esté por debajo del botón de menú */
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   padding-top: 1rem;
   overflow-y: auto;
