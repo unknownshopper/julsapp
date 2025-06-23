@@ -13,10 +13,26 @@ export default defineConfig(({ mode }) => {
       sourcemap: false,
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
+        external: [
+          // Agregar módulos que deben ser tratados como externos
+          '@mui/material',
+          '@emotion/react',
+          '@emotion/styled',
+          '@mui/icons-material',
+          'react',
+          'react-dom',
+          'react-router-dom'
+        ],
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom', 'react-router-dom'],
-            firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth']
+            firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth'],
+            mui: [
+              '@mui/material',
+              '@emotion/react',
+              '@emotion/styled',
+              '@mui/icons-material'
+            ]
           }
         }
       }
