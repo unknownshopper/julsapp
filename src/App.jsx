@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
-import Sidebar from './components/Sidebar';
-// Topbar ha sido eliminado para simplificar la interfaz
+import TopBar from './components/TopBar';
 import Dashboard from './components/Dashboard';
 import Clientes from './components/Clientes';
 import Tareas from './components/Tareas';
@@ -22,98 +21,20 @@ const PrivateRoute = ({ children }) => {
 
 // Componente de diseño para las rutas autenticadas
 const Layout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
-  const location = useLocation();
-  const isMobile = React.useMemo(() => window.innerWidth < 768, []);
-  
-  // Cerrar el menú al cambiar de ruta
-  React.useEffect(() => {
-    setIsSidebarOpen(false);
-  }, [location]);
-  
-  // Efecto para manejar el scroll y el overlay cuando el menú está abierto
-  React.useEffect(() => {
-    if (!isMobile) return;
-    
-    if (isSidebarOpen) {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    } else {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    }
-    
-    return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    };
-  }, [isSidebarOpen, isMobile]);
-
-  // Manejar el cierre con la tecla Escape
-  React.useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape' && isSidebarOpen) {
-        setIsSidebarOpen(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isSidebarOpen]);
-  
-  const toggleSidebar = React.useCallback(() => {
-    setIsSidebarOpen(prev => !prev);
-  }, []);
-  
-  const closeSidebar = React.useCallback(() => {
-    if (isMobile) {
-      setIsSidebarOpen(false);
-    }
-  }, [isMobile]);
-  
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Botón de menú móvil */}
-      <button 
-        className="fixed top-4 left-4 z-50 w-12 h-12 bg-blue-600 text-white rounded-lg flex items-center justify-center text-2xl shadow-lg transform transition-transform duration-200 active:scale-95 md:hidden"
-        onClick={toggleSidebar}
-        aria-label={isSidebarOpen ? 'Cerrar menú' : 'Abrir menú'}
-        aria-expanded={isSidebarOpen}
-        aria-controls="sidebar-navigation"
-      >
-        {isSidebarOpen ? '✕' : '☰'}
-      </button>
-      
-      {/* Sidebar - Siempre visible en desktop */}
-      <div className={`fixed md:static z-40 transition-all duration-300 ${
-        isMobile ? (isSidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'
-      }`}>
-        <Sidebar 
-          isOpen={isMobile ? isSidebarOpen : true} 
-          onClose={closeSidebar}
-        />
-      </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* TopBar */}
+      <TopBar />
       
       {/* Contenido principal */}
-      <main 
-        id="main-content"
-        className={`flex-1 min-h-screen transition-all duration-300 ease-in-out ${
-          isSidebarOpen && isMobile ? 'translate-x-72' : ''
-        }`}
-        onClick={closeSidebar}
-      >
-        <div className={`mx-auto p-4 pt-20 transition-all duration-300 ${
-          isMobile ? '' : 'md:ml-72 md:pt-6 max-w-7xl w-full'
-        }`}>
+      <main className="flex-1 pt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {children}
         </div>
       </main>
+      
+      {/* Notificaciones */}
+      <Toaster position="top-right" />
     </div>
   );
 };
@@ -122,7 +43,6 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Toaster position="top-right" />
         <Routes>
           {/* Rutas públicas */}
           <Route path="/login" element={<Login />} />
