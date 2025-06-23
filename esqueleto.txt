@@ -1,0 +1,15 @@
+crm-react/
+  ├── public/
+  │   └── index.html
+  ├── src/
+  │   ├── components/
+  │   │   ├── Sidebar.jsx
+  │   │   ├── Topbar.jsx
+  │   │   ├── Card.jsx
+  │   │   └── Dashboard.jsx
+  │   ├── App.jsx
+  │   ├── App.css
+  │   ├── index.css
+  │   └── main.jsx
+  ├── package.json
+  └── vite.config.js
