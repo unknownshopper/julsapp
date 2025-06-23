@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './App.css';
@@ -21,14 +21,67 @@ const PrivateRoute = ({ children }) => {
 };
 
 // Componente de diseño para las rutas autenticadas
-const Layout = ({ children }) => (
-  <div className="dashboard-container">
-    <Sidebar />
-    <main className="main-content">
-      {children}
-    </main>
-  </div>
-);
+const Layout = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const location = useLocation();
+  
+  // Cerrar el menú al cambiar de ruta
+  React.useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location]);
+  
+  // Efecto para manejar el scroll y el overlay cuando el menú está abierto
+  React.useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isSidebarOpen]);
+  
+  return (
+    <div className="dashboard-container">
+      {/* Botón de menú móvil */}
+      <button 
+        className="mobile-menu-button md:hidden"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        aria-label={isSidebarOpen ? 'Cerrar menú' : 'Abrir menú'}
+        aria-expanded={isSidebarOpen}
+      >
+        {isSidebarOpen ? '✕' : '☰'}
+      </button>
+      
+      {/* Sidebar */}
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+      />
+      
+      {/* Contenido principal */}
+      <main 
+        className={`main-content ${isSidebarOpen ? 'menu-open' : ''}`}
+        onClick={() => isSidebarOpen && setIsSidebarOpen(false)}
+      >
+        {children}
+      </main>
+      
+      {/* Overlay para móviles */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+    </div>
+  );
+};
 
 function App() {
   return (

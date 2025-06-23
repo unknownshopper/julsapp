@@ -7,11 +7,12 @@
   top: 0;
   background-color: #1a2236;
   color: #e5e7eb;
-  transition: all 0.3s ease;
-  z-index: 30;
+  transition: transform 0.3s ease, width 0.3s ease;
+  z-index: 50;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   padding-top: 1rem;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Mejora el desplazamiento en iOS */
 }
 
 /* Estilos para el encabezado de la barra lateral */
@@ -79,11 +80,31 @@
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    width: 280px; /* Un poco más ancho para móviles */
+    padding-top: 2rem; /* Más espacio en la parte superior */
   }
   
   .sidebar.open {
     transform: translateX(0);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+  }
+  
+  /* Mejorar el contraste en móviles */
+  .sidebar-nav a {
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+  }
+  
+  .sidebar-nav a svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  /* Asegurar que el contenido no se desborde */
+  .sidebar-nav a span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

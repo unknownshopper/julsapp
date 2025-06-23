@@ -6,21 +6,61 @@
   display: flex;
   min-height: 100vh;
   background-color: #f9fafb;
+  position: relative;
 }
 
 .main-content {
   flex: 1;
   padding: 1.5rem;
   margin-left: 16rem; /* Ajusta según el ancho del Sidebar */
-  transition: margin 0.3s ease;
+  transition: all 0.3s ease;
   overflow-y: auto;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
 }
 
 /* Ajustes responsivos */
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
-    padding: 1rem;
+    padding: 5rem 1rem 2rem; /* Más espacio en la parte superior para el botón del menú */
+    transition: transform 0.3s ease, margin 0.3s ease;
+  }
+  
+  /* Cuando el menú está abierto, desplazamos el contenido */
+  .main-content.menu-open {
+    transform: translateX(280px);
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+  }
+  
+  /* Estilo para el botón del menú móvil */
+  .mobile-menu-button {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 50;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+  }
+  
+  .mobile-menu-button:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+  }
+  
+  .mobile-menu-button:active {
+    transform: translateY(0);
   }
 }
 
